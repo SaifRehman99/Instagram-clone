@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Button, TextInput } from "react-native";
+import { View, TextInput, TouchableOpacity, Text } from "react-native";
 
 import { auth } from "../../services/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -7,12 +7,10 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 const Login = () => {
     const [form, setForm] = useState({ email: "", password: "" });
 
-    const onSignUp = async () => {
+    const onLogin = async () => {
         const { email, password } = form;
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-            console.log(userCredential?.user);
+            await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -23,16 +21,63 @@ const Login = () => {
 
     return (
         <View>
-            <TextInput placeholder="john@gmail.com" onChangeText={(email) => setForm((prevForm) => ({ ...prevForm, email }))} value={form?.email} />
+            <View
+                style={{
+                    // flex: 1,
+                    backgroundColor: "#F3F4F8",
+                    marginRight: 10,
+                    justifyContent: "center",
+                    // alignItems: "center",
+                    borderRadius: 12,
+                    height: "100%",
+                }}
+            >
+                <TextInput
+                    placeholder="john@gmail.com"
+                    onChangeText={(email) => setForm((prevForm) => ({ ...prevForm, email }))}
+                    value={form?.email}
+                    style={{
+                        padding: 12,
+                        borderColor: "grey",
+                        borderWidth: 2,
+                        margin: 20,
+                    }}
+                />
 
-            <TextInput
-                placeholder="********"
-                secureTextEntry={true}
-                onChangeText={(password) => setForm((prevForm) => ({ ...prevForm, password }))}
-                value={form?.password}
-            />
+                <TextInput
+                    placeholder="********"
+                    secureTextEntry={true}
+                    onChangeText={(password) => setForm((prevForm) => ({ ...prevForm, password }))}
+                    value={form?.password}
+                    style={{
+                        padding: 12,
+                        borderColor: "grey",
+                        borderWidth: 2,
+                        margin: 20,
+                    }}
+                />
 
-            <Button title="Login" onPress={onSignUp} />
+                <TouchableOpacity
+                    style={{
+                        backgroundColor: "#FE7654",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginLeft: 16,
+                        borderRadius: 16,
+                        padding: 10,
+                    }}
+                    onPress={onLogin}
+                >
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            color: "white",
+                        }}
+                    >
+                        Login
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };

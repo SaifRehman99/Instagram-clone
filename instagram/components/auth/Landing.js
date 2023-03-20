@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
 const Landing = ({ navigation }) => {
     return (
@@ -9,8 +9,35 @@ const Landing = ({ navigation }) => {
                 justifyContent: "center",
             }}
         >
-            <Button title="Register" onPress={() => navigation.navigate("Register")} />
-            <Button title="Login" onPress={() => navigation.navigate("Login")} />
+            <TouchableOpacity
+                style={{
+                    backgroundColor: "#FE7654",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginLeft: 16,
+                    borderRadius: 16,
+                    padding: 10,
+                    margin: 30,
+                }}
+                onPress={() => navigation.navigate("Register")}
+            >
+                <Text style={{ color: "white" }}>Register</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={{
+                    backgroundColor: "#FE7654",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginLeft: 16,
+                    borderRadius: 16,
+                    padding: 10,
+                    margin: 30,
+                }}
+                onPress={() => navigation.navigate("Login")}
+            >
+                <Text style={{ color: "white" }}>Login</Text>
+            </TouchableOpacity>
 
             <Text></Text>
         </View>
