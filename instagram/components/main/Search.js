@@ -45,7 +45,7 @@ export default function Search({ navigation }) {
 
     const handleChange = myDebounce((data) => {
         fetchUser(data);
-    }, 2000);
+    }, 500);
 
     return (
         <View>

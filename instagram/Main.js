@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { View, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
-import { fetchUser } from "./features/user/userSlice";
+import { fetchUser, fetchUserFollowing, fetchUserPosts } from "./features/user/userSlice";
 
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import Feed from "./components/main/Feed";
@@ -23,6 +23,8 @@ const Main = () => {
 
     useEffect(() => {
         dispatch(fetchUser());
+        // dispatch(fetchUserPosts());
+        dispatch(fetchUserFollowing());
     }, []);
 
     return (

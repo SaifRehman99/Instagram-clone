@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, Image } from "react-native";
+import { View, Text, FlatList, StyleSheet, Image, Button } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserPosts } from "../../features/user/userSlice";
-import { db } from "../../services/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { fetchUserFollowing, fetchUserPosts } from "../../features/user/userSlice";
+import { auth, db } from "../../services/firebase";
+import { addDoc, collection, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 
 const Profile = ({ navigation, route }) => {
     const [user_, setUser] = useState(null);
+    const [isFollowing, setFollowing] = useState(false);
 
     const dispatch = useDispatch();
-    const { user, posts } = useSelector((state) => state?.user);
+    const { user, posts, following } = useSelector((state) => state?.user);
 
+    console.log(following, "---");
     useEffect(() => {
         dispatch(fetchUserPosts(route?.params?.id));
+        console.log(1);
 
         if (route?.params?.id) {
             (async () => {
@@ -27,13 +30,31 @@ const Profile = ({ navigation, route }) => {
             })();
         } else {
         }
-    }, [route]);
+
+        if (following.indexOf(route?.params?.id) > -1) {
+            setFollowing(true);
+        } else {
+            setFollowing(false);
+        }
+    }, [route, following]);
+
+    const onFollowOrUnfollow = async () => {
+        isFollowing
+            ? await deleteDoc(doc(db, `following/${auth?.currentUser?.uid}/userFollowing/${route?.params?.id}`))
+            : await setDoc(doc(db, `following/${auth?.currentUser?.uid}/userFollowing/${route?.params?.id}`), {});
+
+        dispatch(fetchUserFollowing());
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.containerInfo}>
                 <Text>{user_ ? user_?.name : user?.name}</Text>
                 <Text>{user_ ? user_?.email : user?.email}</Text>
+
+                {route?.params?.id !== auth.currentUser?.uid ? (
+                    <Button title={isFollowing ? "Following" : "Follow"} onPress={() => onFollowOrUnfollow()} />
+                ) : null}
             </View>
 
             <View style={styles.containerGallery}>
@@ -49,13 +70,13 @@ const Profile = ({ navigation, route }) => {
                                 source={{ uri: item.url }}
                                 // fadeDuration={2000}
                                 onProgress={({ nativeEvent: { loaded, total } }) => {
-                                    console.log(loaded, total);
+                                    // console.log(loaded, total);
                                 }}
                                 onLoadStart={() => {
-                                    console.log("loading....");
+                                    // console.log("loading....");
                                 }}
                                 onLoadEnd={() => {
-                                    console.log("loaded....");
+                                    // console.log("loaded....");
                                 }}
                                 progressiveRenderingEnabled={true}
                                 loadingIndicatorSource={{ uri: "https://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/128/Emotes-face-smile-icon.png" }}
