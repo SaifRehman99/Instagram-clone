@@ -19,6 +19,7 @@ import { store } from "./store";
 import { Provider } from "react-redux";
 
 import Main from "./Main";
+import Save from "./components/main/Save";
 
 const Stack = createNativeStackNavigator();
 
@@ -138,6 +139,7 @@ export default function App() {
                     <Stack.Navigator initialRouteName="Main">
                         <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
                         <Stack.Screen name="Add" component={AddScreen} />
+                        <Stack.Screen name="Save" component={Save} />
                     </Stack.Navigator>
                 </SafeAreaView>
             </NavigationContainer>

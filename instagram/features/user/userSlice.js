@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, collectionGroup, doc, getDoc, getDocs, query, orderBy } from "firebase/firestore";
 
 import { db, auth } from "../../services/firebase";
 
 const initialState = {
     user: null,
+    posts: [],
 };
 
 export const fetchUser = createAsyncThunk("content/fetchUser", async () => {
@@ -16,6 +17,26 @@ export const fetchUser = createAsyncThunk("content/fetchUser", async () => {
     } else {
         return null;
     }
+});
+
+export const fetchUserPosts = createAsyncThunk("content/fetchUserPosts", async () => {
+    const docRef = collection(db, `posts/${auth?.currentUser?.uid}/userPosts`);
+
+    const q = query(docRef, orderBy("creation", "desc"));
+
+    const docSnap = await getDocs(q);
+
+    const filteredData = [];
+
+    docSnap.forEach((doc) => {
+        filteredData.push({
+            id: doc.id,
+            creation: doc.data().creation?.toDate().getTime(),
+            ...doc.data(),
+        });
+    });
+
+    return filteredData;
 });
 
 export const userSlice = createSlice({
@@ -34,6 +55,19 @@ export const userSlice = createSlice({
             //   state.isLoading = false
             //   state.error = action.error.message
             state.user = null;
+        });
+
+        builder.addCase(fetchUserPosts.pending, (state) => {
+            //   state.isLoading = true
+        });
+        builder.addCase(fetchUserPosts.fulfilled, (state, action) => {
+            //   state.isLoading = false
+            state.posts = action.payload;
+        });
+        builder.addCase(fetchUserPosts.rejected, (state, action) => {
+            //   state.isLoading = false
+            //   state.error = action.error.message
+            state.posts = [];
         });
     },
 });

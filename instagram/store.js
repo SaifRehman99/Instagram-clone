@@ -7,4 +7,9 @@ export const store = configureStore({
     },
     // middleware: (getDefaultMiddleware) =>
     // getDefaultMiddleware().concat(loggerMiddleware),
+
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+        }),
 });

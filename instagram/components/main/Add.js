@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-export default function App() {
+export default function Add({ navigation }) {
     const [type, setType] = useState(CameraType.back);
     const [cameraPermission, requestCameraPermission] = Camera.useCameraPermissions();
     const [galleryPermission, requestGalleryPermission] = ImagePicker.useCameraPermissions();
@@ -39,8 +39,6 @@ export default function App() {
             quality: 1,
         });
 
-        console.log(result);
-
         if (!result.canceled) {
             setImage(result.assets[0].uri);
         }
@@ -50,13 +48,14 @@ export default function App() {
         <>
             <View style={{ flex: 1 }}>
                 <View style={styles.cameraContainer}>
-                    <Camera style={styles.camera} type={type} ratio={"1:1"} ref={(ref) => setCamera(ref)} />
+                    <Camera style={styles.camera} type={type} ratio="1:1" ref={(ref) => setCamera(ref)} />
                 </View>
 
                 <Button onPress={toggleCameraType} title="Flip" />
 
                 <Button onPress={takePicture} title="Click" />
                 <Button onPress={pickImage} title="Gallery" />
+                <Button onPress={() => navigation.navigate("Save", { image })} title="Save" />
 
                 {image && <Image source={{ uri: image }} style={{ flex: 1, height: "20%" }} />}
             </View>
