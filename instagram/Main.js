@@ -9,6 +9,8 @@ import Feed from "./components/main/Feed";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Profile from "./components/main/Profile";
+import Search from "./components/main/Search";
+import { auth } from "./services/firebase";
 const Tab = createMaterialBottomTabNavigator();
 
 const EmptyScreen = () => {
@@ -34,6 +36,14 @@ const Main = () => {
                 }}
             />
             <Tab.Screen
+                name="Search"
+                component={Search}
+                options={{
+                    headerShown: false,
+                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons color={color} size={24} name="magnify" />,
+                }}
+            />
+            <Tab.Screen
                 name="AddContainer"
                 component={EmptyScreen}
                 listeners={({ navigation }) => ({
@@ -51,6 +61,12 @@ const Main = () => {
             <Tab.Screen
                 name="Profile"
                 component={Profile}
+                listeners={({ navigation }) => ({
+                    tabPress: (event) => {
+                        event.preventDefault();
+                        navigation.navigate("Profile", { id: auth?.currentUser?.uid });
+                    },
+                })}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ color, size }) => <MaterialCommunityIcons color={color} size={24} name="account-circle" />,

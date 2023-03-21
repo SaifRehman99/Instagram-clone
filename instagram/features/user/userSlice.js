@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { collection, collectionGroup, doc, getDoc, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, collectionGroup, doc, getDoc, getDocs, query, orderBy, where } from "firebase/firestore";
 
 import { db, auth } from "../../services/firebase";
 
@@ -19,8 +19,8 @@ export const fetchUser = createAsyncThunk("content/fetchUser", async () => {
     }
 });
 
-export const fetchUserPosts = createAsyncThunk("content/fetchUserPosts", async () => {
-    const docRef = collection(db, `posts/${auth?.currentUser?.uid}/userPosts`);
+export const fetchUserPosts = createAsyncThunk("content/fetchUserPosts", async (id) => {
+    const docRef = collection(db, `posts/${id ?? auth?.currentUser?.uid}/userPosts`);
 
     const q = query(docRef, orderBy("creation", "desc"));
 
